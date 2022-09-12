@@ -95,7 +95,7 @@ def _create_tabs(
             input.ipyplot-tab-%(0)s + label.ipyplot-tab-label-%(0)s {
                 border: 1px solid #999;
                 background: #EEE;
-                padding: 4px 12px;
+                padding: 0px 12px;
                 border-radius: 4px 4px 0 0;
                 position: relative;
                 top: 1px;
@@ -312,20 +312,29 @@ def _create_img(
             image,
             width if resize_image else None)
 
+    # html = """
+    # <div class="ipyplot-placeholder-div-%(0)s">
+    #     <div id="ipyplot-content-div-%(0)s-%(1)s" class="ipyplot-content-div-%(0)s">
+    #         <h4 style="font-size: 12px; word-wrap: break-word;">%(2)s</h4>
+    #         %(3)s
+    #         <a href="#!">
+    #             <span class="ipyplot-img-close"/>
+    #         </a>
+    #         <a href="#ipyplot-content-div-%(0)s-%(1)s">
+    #             <span class="ipyplot-img-expand"/>
+    #         </a>
+    #     </div>
+    # </div>
+    # """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}  # NOQA E501
     html = """
     <div class="ipyplot-placeholder-div-%(0)s">
         <div id="ipyplot-content-div-%(0)s-%(1)s" class="ipyplot-content-div-%(0)s">
             <h4 style="font-size: 12px; word-wrap: break-word;">%(2)s</h4>
             %(3)s
-            <a href="#!">
-                <span class="ipyplot-img-close"/>
-            </a>
-            <a href="#ipyplot-content-div-%(0)s-%(1)s">
-                <span class="ipyplot-img-expand"/>
-            </a>
         </div>
     </div>
     """ % {'0': grid_style_uuid, '1': img_uuid, '2': label, '3': img_html}  # NOQA E501
+    
     return html
 
 
@@ -424,6 +433,77 @@ def _get_default_style(img_width: int, zoom_scale: float):
         Output HTML code.
     """  # NOQA E501
     style_uuid = shortuuid.uuid()
+#     html = """
+#         <style>
+#         #ipyplot-imgs-container-div-%(0)s {
+#             width: 100%%;
+#             height: 100%%;
+#             margin: 0%%;
+#             overflow: auto;
+#             position: relative;
+#             overflow-y: scroll;
+#         }
+
+#         div.ipyplot-placeholder-div-%(0)s {
+#             width: %(1)spx;
+#             display: inline-block;
+#             margin: 3px;
+#             position: relative;
+#         }
+
+#         div.ipyplot-content-div-%(0)s {
+#             width: %(1)spx;
+#             background: white;
+#             display: inline-block;
+#             vertical-align: top;
+#             text-align: center;
+#             position: relative;
+#             border: 2px solid #ddd;
+#             top: 0;
+#             left: 0;
+#         }
+
+#         div.ipyplot-content-div-%(0)s span.ipyplot-img-close {
+#             display: none;
+#         }
+
+#         div.ipyplot-content-div-%(0)s span {
+#             width: 100%%;
+#             height: 100%%;
+#             position: absolute;
+#             top: 0;
+#             left: 0;
+#         }
+
+#         div.ipyplot-content-div-%(0)s img {
+#             width: %(1)spx;
+#         }
+
+#         div.ipyplot-content-div-%(0)s span.ipyplot-img-close:hover {
+#             cursor: zoom-out;
+#         }
+#         div.ipyplot-content-div-%(0)s span.ipyplot-img-expand:hover {
+#             cursor: zoom-in;
+#         }
+
+#         div[id^=ipyplot-content-div-%(0)s]:target {
+#             transform: scale(%(2)s);
+#             transform-origin: left top;
+#             z-index: 5000;
+#             top: 0;
+#             left: 0;
+#             position: absolute;
+#         }
+
+#         div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-close {
+#             display: block;
+#         }
+
+#         div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-expand {
+#             display: none;
+#         }
+#         </style>
+#     """ % {'0': style_uuid, '1': img_width, '2': zoom_scale}
     html = """
         <style>
         #ipyplot-imgs-container-div-%(0)s {
@@ -470,13 +550,6 @@ def _get_default_style(img_width: int, zoom_scale: float):
             width: %(1)spx;
         }
 
-        div.ipyplot-content-div-%(0)s span.ipyplot-img-close:hover {
-            cursor: zoom-out;
-        }
-        div.ipyplot-content-div-%(0)s span.ipyplot-img-expand:hover {
-            cursor: zoom-in;
-        }
-
         div[id^=ipyplot-content-div-%(0)s]:target {
             transform: scale(%(2)s);
             transform-origin: left top;
@@ -486,13 +559,6 @@ def _get_default_style(img_width: int, zoom_scale: float):
             position: absolute;
         }
 
-        div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-close {
-            display: block;
-        }
-
-        div[id^=ipyplot-content-div-%(0)s]:target span.ipyplot-img-expand {
-            display: none;
-        }
         </style>
     """ % {'0': style_uuid, '1': img_width, '2': zoom_scale}
     return html, style_uuid

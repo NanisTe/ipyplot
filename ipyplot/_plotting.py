@@ -4,6 +4,7 @@ It contains all the user-facing functions for displaying images in Python Notebo
 """  # NOQA E501
 
 import numpy as _np
+import os
 from typing import Sequence
 
 from ._html_helpers import (
@@ -20,7 +21,10 @@ def plot_class_tabs(
         zoom_scale: float = 2.5,
         show_url: bool = True,
         force_b64: bool = False,
-        tabs_order: Sequence[str or int] = None):
+        tabs_order: Sequence[str or int] = None,
+        display: bool = True,
+        save_html: bool = False,
+        save_path: str = None):
     """
     Efficient and convenient way of displaying images in interactive tabs grouped by labels.
     For tabs ordering and filtering check out `tabs_order` param.
@@ -81,8 +85,14 @@ def plot_class_tabs(
         show_url=show_url,
         force_b64=force_b64,
         tabs_order=tabs_order)
+    
+    if save_html and save_path != None:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        file = open(save_path, "w")
+        file.write(html)
+        file.close()
 
-    _display_html(html)
+    if display: _display_html(html)
 
 
 def plot_images(
@@ -93,7 +103,10 @@ def plot_images(
         img_width: int = 150,
         zoom_scale: float = 2.5,
         show_url: bool = True,
-        force_b64: bool = False):
+        force_b64: bool = False,
+        display: bool = True,
+        save_html: bool = False,
+        save_path: str = None):
     """
     Simply displays images provided in `images` param in grid-like layout.
     Check optional params for max number of images to plot, labels and custom texts to add to each image, image width and other options.
@@ -150,8 +163,14 @@ def plot_images(
         zoom_scale=zoom_scale,
         show_url=show_url,
         force_b64=force_b64)
-
-    _display_html(html)
+    
+    if save_html and save_path != None:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        file = open(save_path, "w")
+        file.write(html)
+        file.close()
+    
+    if display: _display_html(html)
 
 
 def plot_class_representations(
@@ -162,7 +181,10 @@ def plot_class_representations(
         show_url: bool = True,
         force_b64: bool = False,
         ignore_labels: Sequence[str or int] = None,
-        labels_order: Sequence[str or int] = None):
+        labels_order: Sequence[str or int] = None,
+        display: bool = True,
+        save_html: bool = False,
+        save_path: str = None):
     """
     Displays single image (first occurence for each class) for each label/class in grid-like layout.
     Check optional params for labels filtering, ignoring and ordering, image width and other options.
@@ -220,4 +242,7 @@ def plot_class_representations(
         img_width=img_width,
         zoom_scale=zoom_scale,
         show_url=show_url,
-        force_b64=force_b64)
+        force_b64=force_b64,
+        display=display,
+        save_html=save_html,
+        save_path=save_path)
